@@ -2,26 +2,24 @@ package ru.rudn.science.belov_course.task1
 
 import java.io.File
 
-fun f(x: Double): Double = Math.exp(x);
-fun fDerrivativeExact(x: Double) = Math.exp(x)
-
 fun main(args: Array<String>) {
     val segmentStart: Double = 0.0
-    val segmentsEnd: Double = 1.0
+    val segmentEnd: Double = 1.0
 
-    val nodes = listOf(10, 20, 40, 80, 160)
-    val methods = listOf(::method1, ::method2, ::method3)
+    val nodes = listOf(10, 20, 40, 80, 160, 320, 640, 1280)
 
     for (N in nodes) {
-        calculate(segmentStart, segmentsEnd, N, 1..N - 1, ::method1)
-        calculate(segmentStart, segmentsEnd, N, 2..N, ::method2)
-        calculate(segmentStart, segmentsEnd, N, 2..N - 1, ::method3)
+        calculate(segmentStart, segmentEnd, N, 1..N - 1, ::method1)
+        calculate(segmentStart, segmentEnd, N, 2..N, ::method2)
+        calculate(segmentStart, segmentEnd, N, 2..N - 1, ::method3)
     }
     calculateError(nodes, "task1_data/main$1")
     calculateError(nodes, "task1_data/main$2")
     calculateError(nodes, "task1_data/main$3")
 }
 
+fun f(x: Double): Double = Math.exp(x);
+fun fDerrivativeExact(x: Double) = Math.exp(x)
 fun method1(x: Double, h: Double) = (f(x + h) - f(x)) / h
 fun method2(x: Double, h: Double) = (f(x) - f(x - h)) / h
 fun method3(x: Double, h: Double) = (f(x + h) - f(x - h)) / (2 * h)
