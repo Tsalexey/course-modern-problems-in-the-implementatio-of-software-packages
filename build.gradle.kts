@@ -20,3 +20,8 @@ dependencies {
     // Use the Kotlin JDK 8 standard library.
     implementation(kotlin("stdlib-jdk8"))
 }
+
+tasks.wrapper {
+    gradleVersion = "6.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
