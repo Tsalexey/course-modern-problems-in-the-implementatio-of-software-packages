@@ -36,7 +36,6 @@ fun task3(buildDir: File) {
             val d = abs(integralExactValue - integral)
 
             out.println("${N};${integral};${integralExactValue};${d};${Math.log(N.toDouble())};${Math.log(d)}")
-            println("N = ${N}, integral=${integral}, exact value = ${integralExactValue}, diff = ${d}")
         }
     }
 }
