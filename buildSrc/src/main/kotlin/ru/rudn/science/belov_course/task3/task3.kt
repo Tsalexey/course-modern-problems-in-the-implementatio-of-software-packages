@@ -9,7 +9,7 @@ fun f(x: Double): Double = Math.exp(-x.pow(2))
 //fun xi(ksi: Double): Double = ksi / sqrt(1+ksi.pow(2)) // TODO: probably wrong defined xi function
 fun xi(ksi: Double): Double = ksi / sqrt(1 - ksi.pow(2))
 
-fun task3() {
+fun task3(buildDir: File) {
     val nodes = listOf(10, 20, 40, 80, 160, 320, 640, 1280)
     val alpha = 0.0
     val beta = 1.0

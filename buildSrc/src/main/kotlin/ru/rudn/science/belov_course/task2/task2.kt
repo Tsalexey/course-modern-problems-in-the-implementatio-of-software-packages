@@ -4,7 +4,7 @@ import java.io.File
 import kotlin.math.abs
 import kotlin.math.pow
 
-fun task2() {
+fun task2(buildDir: File) {
     val segmentStart = 0.0
     val segmentEnd = 1.0
     val nodes = listOf(10, 20, 40, 80, 160, 320, 640, 1280)

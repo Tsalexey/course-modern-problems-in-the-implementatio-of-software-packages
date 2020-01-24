@@ -2,7 +2,7 @@ package ru.rudn.science.belov_course.task1
 
 import java.io.File
 
-fun task1() {
+fun task1(buildDir: File) {
     val segmentStart: Double = 0.0
     val segmentEnd: Double = 1.0
 
@@ -13,9 +13,9 @@ fun task1() {
         calculate(segmentStart, segmentEnd, N, 2..N, ::method2)
         calculate(segmentStart, segmentEnd, N, 2..N - 1, ::method3)
     }
-    calculateError(nodes, "task1_data/main$1")
-    calculateError(nodes, "task1_data/main$2")
-    calculateError(nodes, "task1_data/main$3")
+    calculateError(nodes, "task1_data/task1$1")
+    calculateError(nodes, "task1_data/task1$2")
+    calculateError(nodes, "task1_data/task1$3")
 }
 
 fun f(x: Double): Double = Math.exp(x)
