@@ -29,18 +29,18 @@ fun main() {
 
         for (n in 1..N) {
             for (m in 1..M) {
-                val derrivative = ((tau / h) * u.get(n - 1)!!.get(m) + u.get(n)!!.get(m - 1)!!) / (1 + tau / h)
+                val derrivative = ((tau / h) * u.get(n - 1)!!.get(m) + u.get(n)!!.get(m - 1)) / (1 + tau / h)
                 u.get(n)?.set(m, derrivative)
             }
         }
 
         // todo: find estimation by richardson
 
-        val file = "task4_data/task4_u_${nodes}nodes.txt";
+        val file = "task4_data/task4_u_${nodes}nodes.txt"
         File(file).printWriter().use { out ->
             for(n in 0..N){
                 for(m in 0..M){
-                    out.println("${0+h*n};${0+tau*m};${u.get(n)!!.get(m)!!}")
+                    out.println("${0 + h * n};${0 + tau * m};${u.get(n)!!.get(m)}")
                 }
             }
         }

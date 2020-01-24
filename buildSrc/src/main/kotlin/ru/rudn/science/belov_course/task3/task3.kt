@@ -11,12 +11,12 @@ fun xi(ksi: Double): Double = ksi / sqrt(1 - ksi.pow(2))
 
 fun main() {
     val nodes = listOf(10, 20, 40, 80, 160, 320, 640, 1280)
-    val alpha = 0.0;
+    val alpha = 0.0
     val beta = 1.0
 
-    val integralExactValue = sqrt(Math.PI) / 2;
+    val integralExactValue = sqrt(Math.PI) / 2
 
-    val file = "task3_data/task3.txt";
+    val file = "task3_data/task3.txt"
     File(file).printWriter().use { out ->
         for (N in nodes) {
 

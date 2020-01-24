@@ -8,7 +8,7 @@ fun main() {
     val segmentStart = 0.0
     val segmentEnd = 1.0
     val nodes = listOf(10, 20, 40, 80, 160, 320, 640, 1280)
-    val exactIntegral = Math.E - 1;
+    val exactIntegral = Math.E - 1
 
     calculate(segmentStart, segmentEnd, nodes, exactIntegral, ::f, ::trapeziumRule)
     calculate(segmentStart, segmentEnd, nodes, exactIntegral, ::f, ::midpointRule)
@@ -51,7 +51,7 @@ fun calculate(startPoint: Double,
               exactIntegral: Double,
               integratedFunction: (x: Double) -> Double,
               integrateNumerically: (range: IntRange, xPoint: Double, h: Double, f: (x: Double) -> Double) -> Double) {
-    val file = "task2_data/${integrateNumerically.javaClass.simpleName}.txt";
+    val file = "task2_data/${integrateNumerically.javaClass.simpleName}.txt"
 
     File(file).printWriter().use { out ->
         for (N in nodes) {

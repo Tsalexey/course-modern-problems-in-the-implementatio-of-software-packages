@@ -18,7 +18,7 @@ fun main() {
     calculateError(nodes, "task1_data/main$3")
 }
 
-fun f(x: Double): Double = Math.exp(x);
+fun f(x: Double): Double = Math.exp(x)
 fun fDerrivativeExact(x: Double) = Math.exp(x)
 fun method1(x: Double, h: Double) = (f(x + h) - f(x)) / h
 fun method2(x: Double, h: Double) = (f(x) - f(x - h)) / h
@@ -32,7 +32,7 @@ fun calculate(segmentStart: Double, segmentEnd: Double, N: Int, range: IntRange,
     var fDerrivative: Double
     var exactResult: Double
 
-    val file = "task1_data/${derrivative.javaClass.simpleName}_${N}nodes.txt";
+    val file = "task1_data/${derrivative.javaClass.simpleName}_${N}nodes.txt"
     File(file).printWriter().use { out ->
         for (i in range) {
             fDerrivative = derrivative(x, h)
@@ -49,7 +49,7 @@ fun calculateError(nodes: List<Int>, inputFileNamePrefix: String) {
 
     for (N in nodes) {
         var d: Double
-        var inputFileName = "${inputFileNamePrefix}_${N}nodes.txt";
+        var inputFileName = "${inputFileNamePrefix}_${N}nodes.txt"
         File(inputFileName).inputStream().bufferedReader().useLines { lines ->
             lines.forEach {
                 d = it.split(";").last().toDouble()
