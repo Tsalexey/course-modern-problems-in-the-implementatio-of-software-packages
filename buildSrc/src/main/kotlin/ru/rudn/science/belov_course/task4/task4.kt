@@ -3,7 +3,7 @@ package ru.rudn.science.belov_course.task4
 import java.io.File
 import kotlin.math.pow
 
-fun main() {
+fun task4() {
     val nodesCountList = arrayListOf<Int>(100, 200, 400, 800)
     val xRange = 0..10 // x stands for space
     val tRange = 0..10 // t stands for time

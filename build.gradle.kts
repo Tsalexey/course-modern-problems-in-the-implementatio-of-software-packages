@@ -4,11 +4,10 @@
  * This generated file contains a sample Kotlin application project to get you started.
  */
 
-plugins {
-    // Apply the Kotlin JVM plugin to add support for Kotlin on the JVM.
-    kotlin("jvm") version "1.3.61"
-
-}
+import ru.rudn.science.belov_course.task1.task1
+import ru.rudn.science.belov_course.task2.task2
+import ru.rudn.science.belov_course.task3.task3
+import ru.rudn.science.belov_course.task4.task4
 
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -16,12 +15,19 @@ repositories {
     jcenter()
 }
 
-dependencies {
-    // Use the Kotlin JDK 8 standard library.
-    implementation(kotlin("stdlib-jdk8"))
+tasks {
+    val build by registering {
+        doLast {
+            task1()
+            task2()
+            task3()
+            task4()
+        }
+    }
+
+    wrapper {
+        gradleVersion = "6.1"
+        distributionType = Wrapper.DistributionType.ALL
+    }
 }
 
-tasks.wrapper {
-    gradleVersion = "6.1"
-    distributionType = Wrapper.DistributionType.ALL
-}
