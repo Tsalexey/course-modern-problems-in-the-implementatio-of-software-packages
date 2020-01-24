@@ -18,10 +18,10 @@ repositories {
 tasks {
     val build by registering {
         doLast {
-            task1()
-            task2()
-            task3()
-            task4()
+            task1(project.buildDir)
+            task2(project.buildDir)
+            task3(project.buildDir)
+            task4(project.buildDir)
         }
     }
 
