@@ -1,8 +1,8 @@
-package rudn.science.belov_course.task6
+package ru.rudn.science.belov_course.task1.task6
 
 import kotlin.math.pow
 
-fun task6() {
+fun main(args: Array<String>) {
     val N = 10
     val M = 10
 

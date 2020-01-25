@@ -1,4 +1,4 @@
-package ru.rudn.science.belov_course.task3
+package ru.rudn.science.belov_course.task1.task3
 
 import java.io.File
 import kotlin.math.abs
@@ -9,7 +9,7 @@ fun f(x: Double): Double = Math.exp(-x.pow(2))
 //fun xi(ksi: Double): Double = ksi / sqrt(1+ksi.pow(2)) // TODO: probably wrong defined xi function
 fun xi(ksi: Double): Double = ksi / sqrt(1 - ksi.pow(2))
 
-fun task3() {
+fun main(args: Array<String>) {
     val nodes = listOf(10, 20, 40, 80, 160, 320, 640, 1280)
     val alpha = 0.0
     val beta = 1.0
@@ -31,7 +31,7 @@ fun task3() {
                 val xKsiNext = xi(ksiNext)
                 val h = xKsiNext - xKsiCurrent
                 val xKsiMiddle = xi(alpha + (ksiNext + ksiCurrent) / 2)
-                integral += h * f(xKsiMiddle)
+                integral += h * ru.rudn.science.belov_course.task1.task1.f(xKsiMiddle)
             }
             val d = abs(integralExactValue - integral)
 

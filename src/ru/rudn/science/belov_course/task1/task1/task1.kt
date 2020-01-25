@@ -1,8 +1,8 @@
-package ru.rudn.science.belov_course.task1
+package ru.rudn.science.belov_course.task1.task1
 
 import java.io.File
 
-fun task1() {
+fun main(args: Array<String>) {
     val segmentStart: Double = 0.0
     val segmentEnd: Double = 1.0
 
