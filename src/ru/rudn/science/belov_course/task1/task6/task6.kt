@@ -29,35 +29,42 @@ fun init(x: IntRange, t: IntRange, N: Int, h: Double): Map<Int, MutableMap<Int, 
     t.forEach { m ->
         x.forEach { n ->
             u.getValue(m).set(n, Double.NaN)
-            if (n == 0) (u.getValue(m).set(n, 0.0))
-            if (n == N) (u.getValue(m).set(n, 1.0))
-            if (m == 0) u.getValue(m).set(n, point(x, n, h).pow(2))
+            if (n == 0) (u.getValue(m).put(n, 0.0))
+            if (n == N) (u.getValue(m).put(n, 1.0))
+            if (m == 0) u.getValue(m).put(n, point(x, n, h).pow(2))
         }
     }
     return u
 }
 
 fun explicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
+    println("explicit")
+
     val h: Double = (x.last.toDouble() - x.first.toDouble()) / N
     val tau: Double = (t.last.toDouble() - t.first.toDouble()) / M
 
-    val u = init(0..N, 0..N, N, h)
+    val u = init(0..N, 0..M, N, h)
+
+    println("h=${h}, tau=${tau}, R=${tau / h.pow(2)}")
 
     (0..M - 1).forEach { m ->
+        println("m=${m}/${M - 1}")
         (0..N - 2).forEach { n ->
             val xPoint = point(x, n, h)
             val tPoint = point(t, m, tau)
             val phi = f(xPoint, tPoint)
 
-            val u_np1_m = u.getValue(m).getValue(m + 1)
+            val u_np1_m = u.getValue(m).getValue(n + 1)
             val u_n_m = u.getValue(m).getValue(n)
             val u_np2_m = u.getValue(m).getValue(n + 2)
 
-            u.getValue(m + 1).put(n + 1, u_np1_m + (2 * tau / h.pow(2)) * u_np1_m + (tau / h.pow(2)) * u_n_m + (tau / h.pow(2)) * u_np2_m + tau * phi)
+            u.getValue(m + 1).put(n + 1, (tau * (u_np2_m - 2 * u_np1_m - u_n_m) + tau * h.pow(2) * phi + h.pow(2) * u_np1_m / h.pow(2)))
+//            u.getValue(m + 1).put(n + 1, u_np1_m + (2 * tau / h.pow(2)) * u_np1_m + (tau / h.pow(2)) * u_n_m + (tau / h.pow(2)) * u_np2_m + tau * phi)
+//                    println ("${u.getValue(m + 1).getValue(n + 1)} ")
         }
     }
 
-    save(u, "explicit", 0..M, 0..N, x, h, t, tau, times)
+    save(u, "explicit", 0..N, 0..M, x, h, t, tau, times)
 }
 
 fun calculateD(u: Map<Int, MutableMap<Int, Double>>, n: Int, m: Int, x: IntRange, t: IntRange, h: Double, tau: Double): Double {
@@ -65,12 +72,15 @@ fun calculateD(u: Map<Int, MutableMap<Int, Double>>, n: Int, m: Int, x: IntRange
 }
 
 fun implicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
+    println("implicit");
+
     val h: Double = (x.last.toDouble() - x.first.toDouble()) / N
     val tau: Double = (t.last.toDouble() - t.first.toDouble()) / M
 
-    val u = init(0..N, 0..N, N, h)
+    val u = init(0..N, 0..M, N, h)
 
     (1..M).forEach { m ->
+        println("m=${m}/${M}");
         var A: Double = tau
         var B: Double = -(h.pow(2) + 2 * tau)
         var C: Double = tau
@@ -113,7 +123,7 @@ fun implicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
 
     }
 
-    save(u, "implicit", 0..M, 0..N, x, h, t, tau, times)
+    save(u, "implicit", 0..N, 0..M, x, h, t, tau, times)
 }
 
 fun debug(map: Map<Int, Double>, N: Int, s: String) {
@@ -134,6 +144,8 @@ fun save(result: Map<Int, Map<Int, Double>>,
          t: IntRange,
          tau: Double,
          times: List<Double>) {
+    println("saving ${filename}")
+
     val file = "task6_data/task6_${filename}.txt"
     File(file).printWriter().use { out ->
         (tRange).forEach { m ->
