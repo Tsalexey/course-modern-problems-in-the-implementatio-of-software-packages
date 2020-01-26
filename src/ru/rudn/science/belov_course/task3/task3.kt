@@ -6,7 +6,8 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 fun f(x: Double): Double = Math.exp(-x.pow(2))
-//fun xi(ksi: Double): Double = ksi / sqrt(1+ksi.pow(2)) // TODO: probably wrong defined xi function
+// TODO: probably wrong defined xi function
+//fun xi(ksi: Double): Double = ksi / sqrt(1+ksi.pow(2))
 fun xi(ksi: Double): Double = ksi / sqrt(1 - ksi.pow(2))
 
 fun main(args: Array<String>) {
@@ -16,12 +17,9 @@ fun main(args: Array<String>) {
 
     val integralExactValue = sqrt(Math.PI) / 2
 
-    val file = "task3_data/task3.txt"
-    File(file).printWriter().use { out ->
+    File("task3_data/task3.txt").printWriter().use { out ->
         for (N in nodes) {
-
             var integral = 0.0
-
             var hKsi = (beta - alpha) / N
 
             for (i in 0..N - 2) {
@@ -31,11 +29,11 @@ fun main(args: Array<String>) {
                 val xKsiNext = xi(ksiNext)
                 val h = xKsiNext - xKsiCurrent
                 val xKsiMiddle = xi(alpha + (ksiNext + ksiCurrent) / 2)
-                integral += h * ru.rudn.science.belov_course.task1.f(xKsiMiddle)
+                integral += h * f(xKsiMiddle)
             }
             val d = abs(integralExactValue - integral)
 
-            out.println("${N};${integral};${integralExactValue};${d};${Math.log(N.toDouble())};${Math.log(d)}")
+            out.println("${N} ${integral} ${integralExactValue} ${d} ${Math.log(N.toDouble())} ${Math.log(d)}")
         }
     }
 }
