@@ -28,6 +28,15 @@ fun main(args: Array<String>) {
         }
     }
 
+//    (0..M - 1).forEach { m ->
+//        println("m=${m}/${M - 1}")
+//        (0..N - 1).forEach { n ->
+//            val u_np1_m = u.getValue(m).getValue(n + 1)
+//            val u_n_m = u.getValue(m).getValue(n)
+//            u.getValue(m + 1).put(n + 1, (BigDecimal.valueOf(h) * u_np1_m - u_n_m * BigDecimal.valueOf(tau) * u_np1_m + BigDecimal.valueOf(tau) * u_n_m.pow(2)) / BigDecimal.valueOf(h))
+//        }
+//    }
+//
     println("saving results")
     val file = "task5_data/task5_${N}_${M}.txt"
     File(file).printWriter().use { out ->
