@@ -1,6 +1,6 @@
-package ru.rudn.science.belov_course.task1.task2
+package ru.rudn.science.belov_course.task2
 
-import ru.rudn.science.belov_course.task1.task1.f
+import ru.rudn.science.belov_course.task1.f
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.pow

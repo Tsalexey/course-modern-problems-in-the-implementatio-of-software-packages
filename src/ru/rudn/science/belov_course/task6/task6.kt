@@ -1,22 +1,23 @@
-package ru.rudn.science.belov_course.task1.task7
+package ru.rudn.science.belov_course.task6
 
 import java.io.File
 import kotlin.math.abs
-import kotlin.math.exp
 import kotlin.math.pow
 
 fun main(args: Array<String>) {
     val N = 100
     val M = 100
 
-    val xRange = -1..1
-    val tRange = 0..2
+    val xRange = 0..1
+    val tRange = 0..1
 
-    val times = listOf<Double>(0.0, 0.5, 1.0, 1.5, 2.0)
+    val times = listOf<Double>(0.0, 0.25, 0.5, 0.75, 1.0)
 
+    explicit(xRange, tRange, N, M, times)
     implicit(xRange, tRange, N, M, times)
 }
 
+fun f(x: Double, t: Double): Double = 0.0
 
 fun point(range: IntRange, nodeNumber: Int, step: Double): Double = range.first.toDouble() + step * nodeNumber
 
@@ -28,25 +29,44 @@ fun init(x: IntRange, t: IntRange, N: Int, h: Double): Map<Int, MutableMap<Int, 
     t.forEach { m ->
         x.forEach { n ->
             u.getValue(m).set(n, Double.NaN)
-            if (n == 0) (u.getValue(m).put(n, exp(-1.0)))
-            if (n == N) (u.getValue(m).put(n, exp(-1.0)))
-            if (m == 0) u.getValue(m).put(n, exp(2.0))
-            if (m == 1) u.getValue(m).put(n, u.getValue(0).getValue(n))
+            if (n == 0) (u.getValue(m).put(n, 0.0))
+            if (n == N) (u.getValue(m).put(n, 1.0))
+            if (m == 0) u.getValue(m).put(n, point(x, n, h).pow(2))
         }
     }
     return u
 }
 
-fun calculateD(u: Map<Int, MutableMap<Int, Double>>, n: Int, m: Int, x: IntRange, t: IntRange, h: Double, tau: Double, sigma: Double): Double {
-    val u_nm1_mm1 = u.getValue(m - 1).getValue(n - 1)
-    val u_n_mm1 = u.getValue(m - 1).getValue(n)
-    val u_np1_mm1 = u.getValue(m - 1).getValue(n + 1)
-    val u_nm1_m = u.getValue(m).getValue(n - 1)
-    val u_n_m = u.getValue(m).getValue(n)
-    val u_np1_m = u.getValue(m).getValue(n + 1)
+fun explicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
+    println("explicit")
 
-    val G = sigma * (u_nm1_mm1 - 2 * u_n_mm1 + u_np1_mm1) / (h.pow(2)) + ((1 - 2 * sigma) * u_nm1_m - 2 * u_n_m + u_np1_m) / (h.pow(2))
-    return -(tau.pow(2) * G + 2 * u_n_m - u_n_mm1)
+    val h: Double = (x.last.toDouble() - x.first.toDouble()) / N
+    val tau: Double = (t.last.toDouble() - t.first.toDouble()) / M
+
+    val u = init(0..N, 0..M, N, h)
+
+    println("h=${h}, tau=${tau}, R=${tau / h.pow(2)}")
+
+    (0..M - 1).forEach { m ->
+        println("m=${m}/${M - 1}")
+        (0..N - 2).forEach { n ->
+            val xPoint = point(x, n, h)
+            val tPoint = point(t, m, tau)
+            val phi = f(xPoint, tPoint)
+
+            val u_np1_m = u.getValue(m).getValue(n + 1)
+            val u_n_m = u.getValue(m).getValue(n)
+            val u_np2_m = u.getValue(m).getValue(n + 2)
+
+            u.getValue(m + 1).put(n + 1, (tau * (u_np2_m - 2 * u_np1_m - u_n_m) + tau * h.pow(2) * phi + h.pow(2) * u_np1_m / h.pow(2)))
+        }
+    }
+
+    save(u, "explicit", 0..N, 0..M, x, h, t, tau, times)
+}
+
+fun calculateD(u: Map<Int, MutableMap<Int, Double>>, n: Int, m: Int, x: IntRange, t: IntRange, h: Double, tau: Double): Double {
+    return -tau * h.pow(2) * f(point(x, n, h), point(t, m - 1, tau)) - h.pow(2) * u.getValue(m - 1).getValue(n)
 }
 
 fun implicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
@@ -57,13 +77,11 @@ fun implicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
 
     val u = init(0..N, 0..M, N, h)
 
-    val sigma = 0.05
-
-    (1..M - 1).forEach { m ->
+    (1..M).forEach { m ->
         println("m=${m}/${M}");
-        var A: Double = sigma * tau.pow(2) / h.pow(2)
-        var B: Double = -(1 + (2 * sigma * tau.pow(2)) / (h.pow(2)))
-        var C: Double = (sigma * tau.pow(2)) / h.pow(2)
+        var A: Double = tau
+        var B: Double = -(h.pow(2) + 2 * tau)
+        var C: Double = tau
 
         val V = mutableMapOf<Int, Double>()
         val D = mutableMapOf<Int, Double>()
@@ -74,17 +92,12 @@ fun implicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
 
         (1..N - 1).forEach { n ->
             V.put(n, u.getValue(m).getValue(n))
-            D.put(n, calculateD(u, n, m, x, t, h, tau, sigma))
+            D.put(n, calculateD(u, n, m, x, t, h, tau))
             F.put(n, D.getValue(n))
         }
 
-        debug(V, N, "V")
-        debug(D, N, "D")
-
         F.set(1, F.getValue(1) - A * V.getValue(0))
         F.set(N - 1, F.getValue(N - 1) - C * V.getValue(N))
-
-        debug(F, N, "F")
 
         val alpha = mutableMapOf<Int, Double>()
         val beta = mutableMapOf<Int, Double>()
@@ -97,19 +110,13 @@ fun implicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
             beta.put(i, (F.getValue(i) - A * beta.getValue(i - 1)) / (B - A * alpha.getValue(i - 1)))
         }
 
-        debug(alpha, N, "alpha")
-        debug(beta, N, "beta")
-
         V.put(N - 1, beta.getValue(N - 1))
         for (i in N - 2 downTo 1) {
             V.put(i, beta.getValue(i) - alpha.getValue(i) * V.getValue(i + 1))
         }
 
-
-        debug(V, N, "V")
-
         (1..N - 1).forEach { i ->
-            u.getValue(m + 1).put(i, V.getValue(i))
+            u.getValue(m).put(i, V.getValue(i))
         }
 
     }
@@ -137,21 +144,17 @@ fun save(result: Map<Int, Map<Int, Double>>,
          times: List<Double>) {
     println("saving ${filename}")
 
-    val max: Double
-    val min: Double
-
-    val file = "task7_data/task7_${filename}.txt"
+    val file = "task6_data/task6_${filename}.txt"
     File(file).printWriter().use { out ->
         (tRange).forEach { m ->
             (xRange).forEach { n ->
-                out.println("${point(t, m, tau)} ${point(x, n, h)} ${result.getValue(m).getValue(n)} ${result.getValue(m).getValue(n)}")
+                out.println("${point(x, n, h)};${point(t, m, tau)};${result.getValue(m).getValue(n)}")
             }
-            out.println()
         }
     }
 
     for (time in times) {
-        val file = "task7_data/task7_${filename}_time${time}.txt"
+        val file = "task6_data/task6_${filename}_time${time}.txt"
         File(file).printWriter().use { out ->
             File(file).printWriter().use { out ->
                 (tRange).forEach { m ->

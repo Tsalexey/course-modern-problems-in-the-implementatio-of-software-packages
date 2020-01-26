@@ -1,4 +1,4 @@
-package ru.rudn.science.belov_course.task1.task1
+package ru.rudn.science.belov_course.task1
 
 import java.io.File
 

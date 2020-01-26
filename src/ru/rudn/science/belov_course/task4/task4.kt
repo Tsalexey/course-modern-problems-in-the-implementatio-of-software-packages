@@ -1,4 +1,4 @@
-package ru.rudn.science.belov_course.task1.task4
+package ru.rudn.science.belov_course.task4
 
 import java.io.File
 import kotlin.math.pow

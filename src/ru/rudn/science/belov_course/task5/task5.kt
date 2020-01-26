@@ -1,4 +1,4 @@
-package ru.rudn.science.belov_course.task1.task5
+package ru.rudn.science.belov_course.task5
 
 import java.io.File
 import java.math.BigDecimal

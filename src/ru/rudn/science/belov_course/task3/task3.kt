@@ -1,4 +1,4 @@
-package ru.rudn.science.belov_course.task1.task3
+package ru.rudn.science.belov_course.task3
 
 import java.io.File
 import kotlin.math.abs
@@ -31,7 +31,7 @@ fun main(args: Array<String>) {
                 val xKsiNext = xi(ksiNext)
                 val h = xKsiNext - xKsiCurrent
                 val xKsiMiddle = xi(alpha + (ksiNext + ksiCurrent) / 2)
-                integral += h * ru.rudn.science.belov_course.task1.task1.f(xKsiMiddle)
+                integral += h * ru.rudn.science.belov_course.task1.f(xKsiMiddle)
             }
             val d = abs(integralExactValue - integral)
 
