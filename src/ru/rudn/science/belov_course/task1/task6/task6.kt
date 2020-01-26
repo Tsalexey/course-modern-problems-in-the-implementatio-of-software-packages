@@ -2,7 +2,6 @@ package ru.rudn.science.belov_course.task1.task6
 
 import java.io.File
 import kotlin.math.abs
-import kotlin.math.exp
 import kotlin.math.pow
 
 fun main(args: Array<String>) {
@@ -18,7 +17,7 @@ fun main(args: Array<String>) {
     implicit(xRange, tRange, N, M, times)
 }
 
-fun f(x: Double, t: Double): Double = exp(x * t)
+fun f(x: Double, t: Double): Double = 0.0
 
 fun point(range: IntRange, nodeNumber: Int, step: Double): Double = range.first.toDouble() + step * nodeNumber
 
@@ -52,14 +51,20 @@ fun explicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
     var uNext: Double
 
     (0..M - 1).forEach { m ->
-        (1..N - 1).forEach { n ->
+        (0..N - 2).forEach { n ->
             xPoint = point(x, n, h)
             tPoint = point(t, m, tau)
             phi = f(xPoint, tPoint)
-            uCurent = u.getValue(m).getValue(n)
-            uPrev = u.getValue(m).getValue(n - 1)
-            uNext = u.getValue(m).getValue(n + 1)
-            u.getValue(m + 1).set(n, tau * phi + uCurent + (tau / h.pow(2)) * (uNext - 2 * uCurent + uPrev))
+
+            val u_np1_m = u.getValue(m).getValue(m + 1)
+            val u_n_m = u.getValue(m).getValue(n)
+            val u_np2_m = u.getValue(m).getValue(n + 2)
+
+            u.getValue(m + 1).put(n + 1, u_np1_m + (2 * tau / h.pow(2)) * u_np1_m + (tau / h.pow(2)) * u_n_m + (tau / h.pow(2)) * u_np2_m + tau * phi)
+//            uCurent = u.getValue(m).getValue(n)
+//            uPrev = u.getValue(m).getValue(n - 1)
+//            uNext = u.getValue(m).getValue(n + 1)
+//            u.getValue(m + 1).set(n, tau * phi + uCurent + (tau / h.pow(2)) * (uNext - 2 * uCurent + uPrev))
         }
     }
 
