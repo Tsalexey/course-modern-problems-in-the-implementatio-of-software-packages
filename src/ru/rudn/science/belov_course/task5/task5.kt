@@ -42,8 +42,9 @@ fun main(args: Array<String>) {
     File(file).printWriter().use { out ->
         (0..M).forEach { m ->
             (0..N).forEach { n ->
-                out.println("${0 + h * n};${0 + tau * m};${u.getValue(m).getValue(n)}")
+                out.println("${0 + tau * m} ${0 + h * n} ${u.getValue(m).getValue(n)} ${u.getValue(m).getValue(n)}")
             }
+            out.println()
         }
     }
 
@@ -52,8 +53,9 @@ fun main(args: Array<String>) {
         File(file2).printWriter().use { out ->
             (0..M).forEach { m ->
                 (0..N).forEach { n ->
-                    if (abs((0 + tau * m) - t.toDouble()) < 0.00001) out.println("${0 + h * n};${0 + tau * m};${u.getValue(m).getValue(n)}")
+                    if (abs((0 + tau * m) - t.toDouble()) < 0.00001) out.println("${0 + tau * m} ${0 + h * n} ${u.getValue(m).getValue(n)}")
                 }
+                out.println()
             }
         }
     }
