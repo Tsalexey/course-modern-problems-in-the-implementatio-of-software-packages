@@ -17,7 +17,7 @@ object Conditions {
     val h: Double = (xRange.last - xRange.first).toDouble() / N
     val tau: Double = (tRange.last - tRange.first).toDouble() / M
 
-    val times = listOf<Double>(0.0, 0.25, 0.5, 0.75, 1.0)
+    val times = listOf<Double>(0.0, 2.5, 5.0, 7.5, 10.0)
 }
 
 fun main(args: Array<String>) {
@@ -26,13 +26,13 @@ fun main(args: Array<String>) {
     val tau = Conditions.tau
     val h = Conditions.h
 
-    var u = init(0..N + 1, 0..M + 1)
+    val u = Utils.init(0..N, 0..M, ::applyCondition)
 
     // не используем решение в лоб, (Калиткин, стр. 164 (Ложная сходимость)
     // нужно использовать неявную консервативную схему
     (0..M - 1).forEach { m ->
         println("m=${m}/${M - 1}")
-        (1..N - 1).forEach { n ->
+        (1..N).forEach { n ->
             val u_n_m = u.getValue(m).getValue(n)
             val u_nm1_mp1 = u.getValue(m + 1).getValue(n - 1)
             u.getValue(m + 1).put(n, sqrt(h.pow(2) / tau.pow(2) + (2 * h / tau) * u_n_m + u_nm1_mp1.pow(2)) - h / tau)
@@ -50,12 +50,14 @@ fun main(args: Array<String>) {
         }
     }
 
-    for (t in listOf(0, 5, 10)) {
+    for (t in Conditions.times) {
         val file2 = "task5_data/task5_${N}_${M}_xu_t=${t}.txt"
         File(file2).printWriter().use { out ->
             (0..M).forEach { m ->
                 (0..N).forEach { n ->
-                    if (abs((0 + tau * m) - t.toDouble()) < 0.00001) out.println("${0 + tau * m} ${0 + h * n} ${u.getValue(m).getValue(n)}")
+                    if (abs(Utils.point(Conditions.xRange, m, tau) - t) < 0.0001) {
+                        out.println("${0 + tau * m} ${0 + h * n} ${u.getValue(m).getValue(n)}")
+                    }
                 }
                 out.println()
             }
@@ -63,17 +65,9 @@ fun main(args: Array<String>) {
     }
 }
 
-fun init(x: IntRange, t: IntRange): Map<Int, MutableMap<Int, Double>> {
-    val u = hashMapOf<Int, MutableMap<Int, Double>>()
-
-    t.forEach { m -> u.put(m, HashMap()) }
-
-    t.forEach { m ->
-        x.forEach { n ->
-            u.getValue(m).put(n, Double.NaN)
-            if (n == 0) u.getValue(m).put(n, 1 / ((1 + Utils.point(t, m, Conditions.tau).pow(2))))
-            if (m == 0) u.getValue(m).put(n, exp(Utils.point(x, n, Conditions.h)))
-        }
-    }
-    return u
+fun applyCondition(u: Map<Int, MutableMap<Int, Double>>, m: Int, n: Int) {
+    u.getValue(m).put(n, Double.NaN)
+    if (n == 0) u.getValue(m).put(n, 1 / ((1 + Utils.point(Conditions.tRange, m, Conditions.tau).pow(2))))
+    if (m == 0) u.getValue(m).put(n, exp(Utils.point(Conditions.xRange, n, Conditions.h)))
+    return;
 }
