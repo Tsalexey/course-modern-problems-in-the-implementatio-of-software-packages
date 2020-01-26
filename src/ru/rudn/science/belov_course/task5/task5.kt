@@ -19,24 +19,19 @@ fun main(args: Array<String>) {
 
     var u = init(0..N + 1, 0..M + 1)
 
+    // не используем решение в ло, (Калиткин, стр. 164 (Ложная сходимость)
+    // нужно использовать консервативную схему
     (0..M - 1).forEach { m ->
         println("m=${m}/${M - 1}")
-        (0..N - 1).forEach { n ->
-            val u_np1_m = u.getValue(m).getValue(n + 1)
+        (1..N).forEach { n ->
             val u_n_m = u.getValue(m).getValue(n)
-            u.getValue(m + 1).put(n + 1, (BigDecimal.valueOf(h) * u_np1_m - u_n_m * BigDecimal.valueOf(tau) * u_np1_m + BigDecimal.valueOf(tau) * u_n_m.pow(2)) / BigDecimal.valueOf(h))
+            val u_nm1_m = u.getValue(m).getValue(n - 1)
+            val u_n_mp1 = u.getValue(m + 1).getValue(n)
+
+            u.getValue(m + 1).put(n, (u_n_mp1 - u_n_m) / BigDecimal.valueOf(tau) + (u_n_m.pow(2) - u_nm1_m.pow(2)) / (BigDecimal.valueOf(2) * BigDecimal.valueOf(h)))
         }
     }
 
-//    (0..M - 1).forEach { m ->
-//        println("m=${m}/${M - 1}")
-//        (0..N - 1).forEach { n ->
-//            val u_np1_m = u.getValue(m).getValue(n + 1)
-//            val u_n_m = u.getValue(m).getValue(n)
-//            u.getValue(m + 1).put(n + 1, (BigDecimal.valueOf(h) * u_np1_m - u_n_m * BigDecimal.valueOf(tau) * u_np1_m + BigDecimal.valueOf(tau) * u_n_m.pow(2)) / BigDecimal.valueOf(h))
-//        }
-//    }
-//
     println("saving results")
     val file = "task5_data/task5_${N}_${M}.txt"
     File(file).printWriter().use { out ->
@@ -69,8 +64,8 @@ fun init(x: IntRange, t: IntRange): Map<Int, MutableMap<Int, BigDecimal>> {
     t.forEach { m ->
         x.forEach { n ->
             u.getValue(m).set(n, BigDecimal.ZERO)
-            if (n == 0) u.getValue(m).put(n, BigDecimal.valueOf((1 / ((1 + m.toDouble().pow(2))))))
-            if (m == 0) u.getValue(m).put(n, BigDecimal.valueOf((Math.exp(n.toDouble()))))
+            if (n == 0) u.getValue(m).put(n, BigDecimal.valueOf(Math.log10(1 / ((1 + m.toDouble().pow(2))))))
+            if (m == 0) u.getValue(m).put(n, BigDecimal.valueOf(Math.log10(Math.exp(n.toDouble()))))
         }
     }
     return u
