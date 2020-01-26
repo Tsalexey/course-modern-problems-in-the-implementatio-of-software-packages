@@ -43,28 +43,17 @@ fun explicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
 
     val u = init(0..N, 0..N, N, h)
 
-    var xPoint: Double
-    var tPoint: Double
-    var phi: Double
-    var uCurent: Double
-    var uPrev: Double
-    var uNext: Double
-
     (0..M - 1).forEach { m ->
         (0..N - 2).forEach { n ->
-            xPoint = point(x, n, h)
-            tPoint = point(t, m, tau)
-            phi = f(xPoint, tPoint)
+            val xPoint = point(x, n, h)
+            val tPoint = point(t, m, tau)
+            val phi = f(xPoint, tPoint)
 
             val u_np1_m = u.getValue(m).getValue(m + 1)
             val u_n_m = u.getValue(m).getValue(n)
             val u_np2_m = u.getValue(m).getValue(n + 2)
 
             u.getValue(m + 1).put(n + 1, u_np1_m + (2 * tau / h.pow(2)) * u_np1_m + (tau / h.pow(2)) * u_n_m + (tau / h.pow(2)) * u_np2_m + tau * phi)
-//            uCurent = u.getValue(m).getValue(n)
-//            uPrev = u.getValue(m).getValue(n - 1)
-//            uNext = u.getValue(m).getValue(n + 1)
-//            u.getValue(m + 1).set(n, tau * phi + uCurent + (tau / h.pow(2)) * (uNext - 2 * uCurent + uPrev))
         }
     }
 
