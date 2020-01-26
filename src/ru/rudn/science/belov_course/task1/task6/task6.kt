@@ -59,8 +59,6 @@ fun explicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
             val u_np2_m = u.getValue(m).getValue(n + 2)
 
             u.getValue(m + 1).put(n + 1, (tau * (u_np2_m - 2 * u_np1_m - u_n_m) + tau * h.pow(2) * phi + h.pow(2) * u_np1_m / h.pow(2)))
-//            u.getValue(m + 1).put(n + 1, u_np1_m + (2 * tau / h.pow(2)) * u_np1_m + (tau / h.pow(2)) * u_n_m + (tau / h.pow(2)) * u_np2_m + tau * phi)
-//                    println ("${u.getValue(m + 1).getValue(n + 1)} ")
         }
     }
 
