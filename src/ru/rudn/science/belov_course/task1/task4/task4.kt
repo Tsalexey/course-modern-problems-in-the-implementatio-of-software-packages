@@ -5,9 +5,8 @@ import kotlin.math.pow
 
 fun main(args: Array<String>) {
     val nodesCountList = arrayListOf<Int>(100, 200, 400, 800)
-    val xRange = 0..10 // x stands for space
-    val tRange = 0..10 // t stands for time
-
+    val xRange = 0..10
+    val tRange = 0..10
 
     for (nodes in nodesCountList) {
         val N = nodes // space nodes count
@@ -16,21 +15,13 @@ fun main(args: Array<String>) {
         val h: Double = (xRange.last - xRange.first).toDouble() / N
         val tau: Double = (tRange.last - tRange.first).toDouble() / M
 
-        var u = hashMapOf<Int, ArrayList<Double>>()
+        var u = init(0..N + 1, 0..M + 1)
 
-        var xInitlist = mutableListOf<Double>()
-        var tInitList = mutableListOf<Double>()
-
-        (0..M).forEach { xInitlist.add(it.toDouble().pow(2)) }
-        (0..N).forEach { tInitList.add(0.0)}
-
-        u.put(0, tInitList.toMutableList() as ArrayList<Double>)
-        (1..M).forEach { u.put(it, xInitlist.toMutableList() as ArrayList<Double>) }
-
-        for (n in 1..N) {
-            for (m in 1..M) {
-                val derrivative = ((tau / h) * u.get(n - 1)!!.get(m) + u.get(n)!!.get(m - 1)) / (1 + tau / h)
-                u.get(n)?.set(m, derrivative)
+        (0..M - 1).forEach { m ->
+            (0..N - 1).forEach { n ->
+                val u_np1_m = u.getValue(m).getValue(n + 1)
+                val u_n_mp1 = u.getValue(m + 1).getValue(n)
+                u.getValue(m + 1).put(n + 1, (h * u_np1_m + tau * u_n_mp1) / (h + tau))
             }
         }
 
@@ -38,11 +29,27 @@ fun main(args: Array<String>) {
 
         val file = "task4_data/task4_u_${nodes}nodes.txt"
         File(file).printWriter().use { out ->
-            for(n in 0..N){
-                for(m in 0..M){
+            for (n in 0..N) {
+                for (m in 0..M) {
                     out.println("${0 + h * n};${0 + tau * m};${u.get(n)!!.get(m)}")
                 }
             }
         }
     }
+}
+
+
+fun init(x: IntRange, t: IntRange): Map<Int, MutableMap<Int, Double>> {
+    val u = hashMapOf<Int, MutableMap<Int, Double>>()
+
+    t.forEach { m -> u.put(m, HashMap()) }
+
+    t.forEach { m ->
+        x.forEach { n ->
+            u.getValue(m).set(n, Double.NaN)
+            if (n == 0) u.getValue(m).put(n, 0.0)
+            if (m == 0) u.getValue(m).put(n, n.toDouble().pow(2))
+        }
+    }
+    return u
 }
