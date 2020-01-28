@@ -26,7 +26,7 @@ fun applyCondition(u: Map<Int, MutableMap<Int, Double>>, m: Int, n: Int) {
     u.getValue(m).set(n, Double.NaN)
     if (n == 0) (u.getValue(m).put(n, exp(-1.0)))
     if (n == Conditions.N) (u.getValue(m).put(n, exp(-1.0)))
-    if (m == 0) u.getValue(m).put(n, exp(2.0))
+    if (m == 0) u.getValue(m).put(n, exp(-2.0))
     if (m == 1) u.getValue(m).put(n, u.getValue(0).getValue(n))
     return;
 }
@@ -39,7 +39,7 @@ fun calculateD(u: Map<Int, MutableMap<Int, Double>>, n: Int, m: Int, x: IntRange
     val u_n_m = u.getValue(m).getValue(n)
     val u_np1_m = u.getValue(m).getValue(n + 1)
 
-    val G = sigma * (u_nm1_mm1 - 2 * u_n_mm1 + u_np1_mm1) / (h.pow(2)) + ((1 - 2 * sigma) * u_nm1_m - 2 * u_n_m + u_np1_m) / (h.pow(2))
+    val G = sigma * (u_nm1_mm1 - 2 * u_n_mm1 + u_np1_mm1) / (h.pow(2)) + ((1 - 2 * sigma) * (u_nm1_m - 2 * u_n_m + u_np1_m)) / (h.pow(2))
     return -(tau.pow(2) * G + 2 * u_n_m - u_n_mm1)
 }
 
@@ -60,7 +60,7 @@ fun implicit(x: IntRange, t: IntRange, N: Int, M: Int, times: List<Double>) {
         Utils.thomasMethod(A, B, C, ::calculateD, u, m, N, x, t, h, tau, sigma);
     }
 
-    Utils.saveU(u, "task7_data", "task7_implicit.txt", 0..N, 0..M, x, h, t, tau, times)
+    Utils.saveU(u, "task7_data", "task7_implicit", 0..N, 0..M, x, h, t, tau, times)
 }
 
 
