@@ -9,6 +9,9 @@ object Conditions {
     val t = 0..10
 
     val times = arrayListOf(0.0, 2.5, 5.0, 7.5, 10.0)
+
+    var h = Double.NaN
+    var tau = Double.NaN
 }
 
 fun main(args: Array<String>) {
@@ -19,6 +22,9 @@ fun main(args: Array<String>) {
 
         val h: Double = (Conditions.x.last - Conditions.x.first).toDouble() / N
         val tau: Double = (Conditions.t.last - Conditions.t.first).toDouble() / M
+
+        Conditions.h = h
+        Conditions.tau = tau
 
         val u = Utils.init(0..N, 0..M, ::applyCondition)
 
@@ -38,6 +44,6 @@ fun main(args: Array<String>) {
 fun applyCondition(u: Map<Int, MutableMap<Int, Double>>, m: Int, n: Int) {
     u.getValue(m).set(n, Double.NaN)
     if (n == 0) u.getValue(m).put(n, 0.0)
-    if (m == 0) u.getValue(m).put(n, n.toDouble().pow(2))
+    if (m == 0) u.getValue(m).put(n, Utils.point(Conditions.x, n, Conditions.h).pow(2))
     return;
 }
