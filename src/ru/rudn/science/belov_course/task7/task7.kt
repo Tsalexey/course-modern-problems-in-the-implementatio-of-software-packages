@@ -24,7 +24,7 @@ fun main(args: Array<String>) {
 
 fun applyCondition(u: Map<Int, MutableMap<Int, Double>>, m: Int, n: Int) {
     u.getValue(m).set(n, Double.NaN)
-    if (n == 0) (u.getValue(m).put(n, exp(-1.0)))
+    if (n == 0) (u.getValue(m).put(n, exp(-2.0)))
     if (n == Conditions.N) (u.getValue(m).put(n, exp(-1.0)))
     if (m == 0) u.getValue(m).put(n, exp(-2.0))
     if (m == 1) u.getValue(m).put(n, u.getValue(0).getValue(n))

@@ -113,8 +113,8 @@ object Utils {
                 File(file).printWriter().use { out ->
                     (tRange).forEach { m ->
                         (xRange).forEach { n ->
-                            if (abs(point(x, m, tau) - time) < 0.00001) {
-                                out.println("${point(x, n, h)};${point(t, m, tau)};${result.getValue(m).getValue(n)}")
+                            if (abs(point(t, m, tau) - time) < 0.00001) {
+                                out.println("${point(x, n, h)} ${result.getValue(m).getValue(n)}")
                             }
                         }
                     }
